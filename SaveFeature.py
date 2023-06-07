@@ -11,6 +11,9 @@ if __name__ == '__main__':
         print(img_path)
         img = Image.open(img_path)
 
+        # 提取特征
         feature = fe.extract(img)
+
+        # 将图片特征进行保存
         feature_path = Path("./database/feature") / (img_path.stem + ".npy")
         np.save(str(feature_path), feature)
