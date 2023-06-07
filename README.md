@@ -14,7 +14,7 @@
 
 # 二、结果展示
 
-![image_result1](C:\Users\AlexStephen\Desktop\北航\计算机视觉\Image_Retrival\image_result1.png)
+![image_result1](https://github.com/Alex0Stephen/Image_Retrival/master/image_result1.png)
 
 ![image_result2](C:\Users\AlexStephen\Desktop\北航\计算机视觉\Image_Retrival\image_result2.png)
 
