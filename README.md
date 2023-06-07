@@ -2,6 +2,10 @@
 
 1.图像数据库准备
 
+(完整程序已上传至：[Alex0Stephen/Image_Retrival (github.com)](https://github.com/Alex0Stephen/Image_Retrival))
+
+(前端界面：https://alex0stephen-image-retrival-searchimage-6j8wft.streamlit.app/)
+
 将作为图库内容的图像放在目录 `./database/image`下，按以下语句运行，会自动读取所有图库图像、提取特征并保存至`./database/feature`下
 
 > python run SaveFeature.py
@@ -10,7 +14,7 @@
 
 运行以下语句，可在本地显示系统操作界面
 
-> python run SearchImage.py
+> streamlit run SearchImage.py
 
 # 二、结果展示
 
