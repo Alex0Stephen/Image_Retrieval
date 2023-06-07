@@ -1,4 +1,4 @@
-torch == 1.8.0+cu111
+torch == 1.8.0
 torchvision == 0.9.0+cu111
 pathlib == 2.3.5
 numpy ==  1.21.5
