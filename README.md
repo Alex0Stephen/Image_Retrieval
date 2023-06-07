@@ -4,21 +4,21 @@
 
 将作为图库内容的图像放在目录 `./database/image`下，按以下语句运行，会自动读取所有图库图像、提取特征并保存至`./database/feature`下
 
->>> python run SaveFeature.py
+> python run SaveFeature.py
 
 2.开启检索系统
 
 运行以下语句，可在本地显示系统操作界面
 
->>> python run SearchImage.py
+> python run SearchImage.py
 
 # 二、结果展示
 
 ![image_result1](image_result1.png)
 
-![image_result2](C:\Users\AlexStephen\Desktop\北航\计算机视觉\Image_Retrival\image_result2.png)
+![image_result2](image_result2.png)
 
-![image_result3](C:\Users\AlexStephen\Desktop\北航\计算机视觉\Image_Retrival\image_result3.png)
+![image_result3](image_result3.png)
 
 # 三、requirement
 
