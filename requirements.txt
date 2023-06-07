@@ -4,4 +4,4 @@ pathlib
 numpy
 matplotlib
 streamlit
-urllib
+urllib3
