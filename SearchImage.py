@@ -27,8 +27,7 @@ def cosine_similarity(f1, f2):
 
 def get_file_content_as_string(path):
     # url = 'https://gitee.com/wu_jia_sheng/graduation_program/blob/master/' + path
-    # url = 'https://raw.githubusercontent.com/Alex0Stephen/Superpixel_Project/master/' + path
-    url = path
+    url = 'https://raw.githubusercontent.com/Alex0Stephen/Image_Retrival/master/' + path
     response = urllib.request.urlopen(url)
     return response.read().decode("utf-8")
 
@@ -63,7 +62,7 @@ if __name__ == '__main__':
     st.title('Welcome To Image Search System')
     st.write(" ------ ")
 
-    if app_mode == "系统信息":
+    if app_mode == "项目信息":
         st.sidebar.write(" ------ ")
         st.sidebar.success("项目信息请往右看!")
         st.write(get_file_content_as_string("Project-Info.md"))
