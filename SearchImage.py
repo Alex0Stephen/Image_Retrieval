@@ -5,18 +5,19 @@ from pathlib import Path
 from PIL import Image
 from ExactFeature import FeatureExtractor
 
-SIDEBAR_OPTIONS = ["项目信息", "上传图片", "使用预置图片"]
+SIDEBAR_OPTIONS = ["项目信息", "上传图片", "使用预置图片"] # 设置下拉列表可选项
 
 fe = FeatureExtractor()
 features = []
 img_paths = []
 
+# 读取图库数据
 for feature_path in Path("./database/feature").glob("*.npy"):
     features.append(np.load(str(feature_path)))
     img_paths.append(Path("./database/image") / (feature_path.stem + ".jpg"))
 features = np.array(features)
 
-
+# 计算图片特征相似度
 def cosine_similarity(f1, f2):
     dot = np.dot(f1, f2)
     norm1 = np.linalg.norm(f1)
@@ -24,14 +25,14 @@ def cosine_similarity(f1, f2):
     cos_sim = dot / (norm1 * norm2)
     return cos_sim
 
-
+#  加载系统说明
 def get_file_content_as_string(path):
     # url = 'https://gitee.com/wu_jia_sheng/graduation_program/blob/master/' + path
     url = 'https://raw.githubusercontent.com/Alex0Stephen/Image_Retrival/master/' + path
     response = urllib.request.urlopen(url)
     return response.read().decode("utf-8")
 
-
+# 展示搜索结果
 def display_result(imgs_list):
     st.title("搜索结果(仅显示相似度大于0.5)：")
     for img_msg in imgs_list:
@@ -44,15 +45,6 @@ if __name__ == '__main__':
 
     st.set_page_config(page_title="Welcome To Image", page_icon=":rainbow:")
 
-    # st.session_state['first_visit'] = ""
-    # if 'first_visit' not in st.session_state:
-    #     st.session_state['first_visit'] = 'True'
-    # else:
-    #     st.session_state['first_visit'] = 'False'
-    #
-    # if st.session_state['first_visit'] == 'True':
-    #     st.balloons()
-
     st.sidebar.warning('请上传图片')
     st.sidebar.write(" ------ ")
     st.sidebar.title("让我们来一起探索吧")
@@ -62,6 +54,7 @@ if __name__ == '__main__':
     st.title('Welcome To Image Search System')
     st.write(" ------ ")
 
+    # 根据不同选择实现不同功能
     if app_mode == "项目信息":
         st.sidebar.write(" ------ ")
         st.sidebar.success("项目信息请往右看!")
@@ -86,10 +79,7 @@ if __name__ == '__main__':
 
                 query = fe.extract(img)
 
-                # distances = np.linalg.norm(features-query, axis=1)
-                # ids = np.argsort(distances)[:5]
-                # scores = [(distances[id], img_paths[id]) for id in ids]
-
+                # 计算图片与图库中图像数据相似度，并从数值高度到底进行排序
                 scores = [(cosine_similarity(query, features[index]), img_paths[index]) for index in range(len(img_paths))]
                 scores.sort(key=lambda x: x[0], reverse=True)
                 display_result(scores)
