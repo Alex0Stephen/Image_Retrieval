@@ -28,7 +28,7 @@ def cosine_similarity(f1, f2):
 #  加载系统说明
 def get_file_content_as_string(path):
     # url = 'https://gitee.com/wu_jia_sheng/graduation_program/blob/master/' + path
-    url = 'https://raw.githubusercontent.com/Alex0Stephen/Image_Retrival/master/' + path
+    url = 'https://raw.githubusercontent.com/Alex0Stephen/Image_Retrieval/master/' + path
     response = urllib.request.urlopen(url)
     return response.read().decode("utf-8")
 
