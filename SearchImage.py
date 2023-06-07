@@ -1,0 +1,121 @@
+import streamlit as st
+import urllib.request
+import numpy as np
+from pathlib import Path
+from PIL import Image
+from ExactFeature import FeatureExtractor
+
+SIDEBAR_OPTIONS = ["项目信息", "上传图片", "使用预置图片"]
+
+fe = FeatureExtractor()
+features = []
+img_paths = []
+
+for feature_path in Path("./database/feature").glob("*.npy"):
+    features.append(np.load(str(feature_path)))
+    img_paths.append(Path("./database/image") / (feature_path.stem + ".jpg"))
+features = np.array(features)
+
+
+def cosine_similarity(f1, f2):
+    dot = np.dot(f1, f2)
+    norm1 = np.linalg.norm(f1)
+    norm2 = np.linalg.norm(f2)
+    cos_sim = dot / (norm1 * norm2)
+    return cos_sim
+
+
+def get_file_content_as_string(path):
+    # url = 'https://gitee.com/wu_jia_sheng/graduation_program/blob/master/' + path
+    # url = 'https://raw.githubusercontent.com/Alex0Stephen/Superpixel_Project/master/' + path
+    url = path
+    response = urllib.request.urlopen(url)
+    return response.read().decode("utf-8")
+
+
+def display_result(imgs_list):
+    st.title("搜索结果(仅显示相似度大于0.5)：")
+    for img_msg in imgs_list:
+        if img_msg[0] > 0.5:
+            img = Image.open(img_msg[1])
+            st.image(img, caption="相似度：" + str(img_msg[0]))
+
+
+if __name__ == '__main__':
+
+    st.set_page_config(page_title="Welcome To Image", page_icon=":rainbow:")
+
+    # st.session_state['first_visit'] = ""
+    # if 'first_visit' not in st.session_state:
+    #     st.session_state['first_visit'] = 'True'
+    # else:
+    #     st.session_state['first_visit'] = 'False'
+    #
+    # if st.session_state['first_visit'] == 'True':
+    #     st.balloons()
+
+    st.sidebar.warning('请上传图片')
+    st.sidebar.write(" ------ ")
+    st.sidebar.title("让我们来一起探索吧")
+
+    app_mode = st.sidebar.selectbox("请从下列选项中选择您想要的功能", SIDEBAR_OPTIONS)
+
+    st.title('Welcome To Image Search System')
+    st.write(" ------ ")
+
+    if app_mode == "系统信息":
+        st.sidebar.write(" ------ ")
+        st.sidebar.success("项目信息请往右看!")
+        st.write(get_file_content_as_string("Project-Info.md"))
+        # st.write(Path("./Project-Info.md"))
+
+    elif app_mode == "上传图片":
+        st.sidebar.write(" ------ ")
+        file = st.file_uploader('上传图片', type=["png", "jpg", "jpeg"])
+        if file is not None:
+            img = Image.open(file)
+
+            st.title("上传图片为：")
+            image = img.resize((224, 224))
+            st.image(image)
+
+            pressed = st.sidebar.button('搜索')
+
+            if pressed:
+                st.empty()
+                st.sidebar.write('请稍等! 你知道的，这通常需要一点时间。')
+
+                query = fe.extract(img)
+
+                # distances = np.linalg.norm(features-query, axis=1)
+                # ids = np.argsort(distances)[:5]
+                # scores = [(distances[id], img_paths[id]) for id in ids]
+
+                scores = [(cosine_similarity(query, features[index]), img_paths[index]) for index in range(len(img_paths))]
+                scores.sort(key=lambda x: x[0], reverse=True)
+                display_result(scores)
+
+        # else:
+        #     st.warning("上传图片失败!")
+
+    elif app_mode == "使用预置图片":
+        st.sidebar.write(" ------ ")
+
+        st.title("预置图片为：")
+        img_fixed = Image.open(Path("./database/image/101400.jpg")).resize((224, 224))
+        st.image(img_fixed)
+
+        pressed = st.sidebar.button('搜索')
+
+        if pressed:
+            st.empty()
+            st.sidebar.write('请稍等! 你知道的，这通常需要一点时间。')
+
+            query = fe.extract(img_fixed)
+
+            scores = [(cosine_similarity(query, features[index]), img_paths[index]) for index in
+                          range(len(img_paths))]
+            scores.sort(key=lambda x: x[0], reverse=True)
+            display_result(scores)
+
+
