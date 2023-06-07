@@ -5,8 +5,8 @@ from torchvision import models, transforms
 
 class FeatureExtractor:
     def __init__(self):
-        vgg = models.vgg16(pretrained=True)
-        self.model = nn.Sequential(*list(vgg.features.children())[:-1])
+        vgg = models.vgg16(pretrained=True)     # 使用vgg16预训练模型提取图片特征
+        self.model = nn.Sequential(*list(vgg.features.children())[:-1])     #去除最后分类器，仅保留网络提取特征部分
         self.model.eval()
         self.transforms = transforms.Compose([
             transforms.Resize((224, 224)),
@@ -16,11 +16,9 @@ class FeatureExtractor:
 
     def extract(self, img):
         # print(self.model._modules.keys())
-        img = self.transforms(img).unsqueeze(0)  # transform and add batch dimension
+        img = self.transforms(img).unsqueeze(0)
         with torch.no_grad():
-            # feature = self.model(img).squeeze().numpy() # squeeze batch dimension and convert to numpy array
             feature = self.model(img)
             feature = torch.flatten(feature)
-            # feature = feature / np.linalg.norm(feature)  # Normalize
             feature = feature.numpy()
         return feature
